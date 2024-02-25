@@ -1,0 +1,31 @@
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+
+# Visual Studio generated files
+.idea
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.user
+
+# Executables and libraries
+assets
+*.exe
+*.dll
+*.lib
+*.so
+
+# System and editor generated files
+.DS_Store
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+/cmake-build-debug/
