@@ -49,6 +49,12 @@ void handy_loadViewport(GLFWwindow* window)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 }
 
+void handy_event_processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
 int helloWindow()
 {
     handy_initGlfw();
@@ -59,6 +65,14 @@ int helloWindow()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        // input
+        handy_event_processInput(window);
+
+        // rendering command here. main loop
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

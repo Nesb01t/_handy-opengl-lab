@@ -7,7 +7,7 @@
 
 int main()
 {
-    log("main");
+    log("main start...");
     helloWindow();
     return 0;
 }

@@ -19,3 +19,15 @@
 ### 最终
 
 最后通过 glfwTerminate 释放 GLFW 资源
+
+### add1. 监听 INPUT
+
+通过 handy_event_processInput 函数
+
+判断如果按下某个键就退出
+
+### add2. 尝试加入 glClearColor
+
+通过 glClearColor 函数设置清空屏幕所用的颜色
+
+并插入在 rendering loop 中
