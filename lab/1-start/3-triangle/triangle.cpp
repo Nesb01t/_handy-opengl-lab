@@ -7,14 +7,9 @@
 //
 void Triangle::triangleMainLoop(GLFWwindow* window)
 {
-    auto shaderProgram = createShaderProgram();
-    auto VBO = createVBO();
     auto VAO = createVAO();
-    glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    auto shaderProgram = createShaderProgram();
+
     while (!glfwWindowShouldClose(window))
     {
         // rendering command here. main loop
@@ -76,9 +71,15 @@ unsigned int Triangle::createVAO()
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
     // 一个 VAO 存储了我们的顶点属性以及使用他的 VBO
     // 当你想要绘制多个对象，先生成/配置所有 VAO 并存储他们
     // 当我们想要绘制一个对象的时候，我们只需要绑定合适的 VAO 绘制之后再解绑它就好了
+
+    unsigned int VBO = createVBO();
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     return VAO;
 }
