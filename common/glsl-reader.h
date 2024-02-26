@@ -6,6 +6,6 @@
 #define GLSL_READER_H
 #include <string>
 
-std::string readShader(const std::string& path);
+std::string readShader(const char* path);
 
 #endif //GLSL_READER_H

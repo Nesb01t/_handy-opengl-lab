@@ -88,8 +88,9 @@ unsigned int Triangle::createVAO()
 unsigned int Triangle::createVertexShader()
 {
     // 暂时将 vertex shader 写在这里
-    const char* vertexShaderSource = readShader(R"(C:\Users\nes\_handy-opengl-lab\shader\vertex-shader__basic.glsl)").
-        c_str();
+    const std::string vertexShaderSource = readShader(
+        R"(C:\Users\nes\_handy-opengl-lab\shader\vertex-shader__basic.glsl)");
+    const char* sourcePtr = vertexShaderSource.c_str();
 
     // 创建一个 shader 对象
     const unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -99,7 +100,7 @@ unsigned int Triangle::createVertexShader()
     // 第二个参数是我们传递的 shader 源码数量
     // 第三个参数是我们传递的真正的 shader 源码
     // 第四个参数是一个数组，用来指定每个传递的 shader 源码的长度
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
+    glShaderSource(vertexShader, 1, &sourcePtr, nullptr);
     glCompileShader(vertexShader);
 
     // 可能需要检查 shader 是否编译成功
@@ -117,13 +118,13 @@ unsigned int Triangle::createVertexShader()
 
 unsigned int Triangle::createFragmentShader()
 {
-    const char* fragmentShaderSource = readShader(
-            R"(C:\Users\nes\_handy-opengl-lab\shader\fragment-shader__basic.glsl)").
-        c_str();
+    const std::string fragmentShaderSource = readShader(
+        R"(C:\Users\nes\_handy-opengl-lab\shader\fragment-shader__basic.glsl)");
+    const char* sourcePtr = fragmentShaderSource.c_str();
 
     // 创建段着色器的过程和顶点着色器类似
     const unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
+    glShaderSource(fragmentShader, 1, &sourcePtr, nullptr);
     glCompileShader(fragmentShader);
 
     return fragmentShader;

@@ -5,24 +5,24 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include "log.h"
 
-std::string readShader(const std::string& path)
+std::string readShader(const char* path)
 {
-    std::ifstream file;
-    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    try
-    {
-        file.open(path);
-        std::stringstream stream;
-        stream << file.rdbuf();
-        file.close();
-        log(stream.str());
-        return stream.str();
-    }
-    catch (std::ifstream::failure& e)
-    {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-    }
-    return "";
+    std::ifstream file(path);
+    if (!file) return {};
+
+    file.ignore(std::numeric_limits<std::streamsize>::max());
+    auto size = file.gcount();
+
+    if (size > 0x10000) // 64KiB sanity check for shaders:
+        return {};
+
+    file.clear();
+    file.seekg(0, std::ios_base::beg);
+
+    std::stringstream sstr;
+    sstr << file.rdbuf();
+    file.close();
+
+    return sstr.str();
 }
