@@ -19,6 +19,8 @@ add_executable(build intro.cpp
         common/setup.cpp
         lab/1-start/3-triangle/triangle.cpp
         lab/1-start/3-triangle/triangle.h
-        lab/1-start/3-triangle/data.h)
+        lab/1-start/3-triangle/data.h
+        common/glsl-reader.h
+        common/glsl-reader.cpp)
 
 target_link_libraries(build ${OpenGLLibs})

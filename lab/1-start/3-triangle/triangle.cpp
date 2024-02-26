@@ -1,5 +1,6 @@
 #include "triangle.h"
 #include "data.h"
+#include "glsl-reader.h"
 #include "log.h"
 #include "setup.h"
 //
@@ -87,12 +88,8 @@ unsigned int Triangle::createVAO()
 unsigned int Triangle::createVertexShader()
 {
     // 暂时将 vertex shader 写在这里
-    const char* vertexShaderSource = "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
+    const char* vertexShaderSource = readShader(R"(C:\Users\nes\_handy-opengl-lab\shader\vertex-shader__basic.glsl)").
+        c_str();
 
     // 创建一个 shader 对象
     const unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -120,12 +117,9 @@ unsigned int Triangle::createVertexShader()
 
 unsigned int Triangle::createFragmentShader()
 {
-    const char* fragmentShaderSource = "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "}\0";
+    const char* fragmentShaderSource = readShader(
+            R"(C:\Users\nes\_handy-opengl-lab\shader\fragment-shader__basic.glsl)").
+        c_str();
 
     // 创建段着色器的过程和顶点着色器类似
     const unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
