@@ -8,12 +8,17 @@ set(OpenGLLibs glfw3 opengl32)
 
 include_directories(include)
 include_directories(common)
+include_directories(lab)
 
 add_executable(build intro.cpp
-        1-start/1-create-window/create-window.cpp
         common/log.h
         common/log.cpp
-        1-start/2-hello-window/hello-window.cpp
-        1-start/2-hello-window/hello-window.h)
+        common/setup.h
+        common/setup.h
+        common/setup.h
+        common/setup.cpp
+        lab/1-start/3-triangle/triangle.cpp
+        lab/1-start/3-triangle/triangle.h
+        lab/1-start/3-triangle/data.h)
 
 target_link_libraries(build ${OpenGLLibs})
