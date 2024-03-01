@@ -4,10 +4,9 @@
 
 #ifndef DATA_H
 #define DATA_H
-float triangleVertices[] = {
+inline float triangleVertices[] = {
     -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+    0.5f, -0.5f, 0.0f,
+    0.0f, 0.5f, 0.0f
 };
-
 #endif //DATA_H
