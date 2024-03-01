@@ -3,6 +3,7 @@
 //
 
 #include "1-start/3-triangle/triangle.h"
+#include "1-start/4-shaders/timed-triangle.h"
 #include "common/log.h"
 
 int main()
@@ -10,7 +11,8 @@ int main()
     log("main start...");
 
     // helloWindow();
-    Triangle::run();
+    // Triangle::run();
+    TimedTriangle::run();
 
     log("main end...");
     return 0;

@@ -1,4 +1,6 @@
 #include "timed-triangle.h"
+
+#include <cmath>
 #include "data.h"
 #include "glsl-reader.h"
 #include "log.h"
@@ -13,16 +15,21 @@ void TimedTriangle::triangleMainLoop(GLFWwindow* window)
 
     while (!glfwWindowShouldClose(window))
     {
-        // rendering command here. main loop
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // main loop
+        // main
         glUseProgram(shaderProgram);
+
+        // update the uniform color
+        float timeValue = glfwGetTime();
+        float greenValue = std::sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        glUniform4f(vertexColorLocation, 1.0f - greenValue, greenValue, 0.5f * greenValue, 1.0f);
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        // check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -31,51 +38,20 @@ void TimedTriangle::triangleMainLoop(GLFWwindow* window)
 
 unsigned int TimedTriangle::createVBO()
 {
-    // 生成一个 unique id 的 VBO
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-    // VBO 的类型是 array buffer, OpenGL 允许我们同时绑定到多个缓冲区
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    // 从现在开始，我们在 array buffer 上的操作都会影响到 VBO
-    // glBufferData 专门将用户定义的数据复制到当前绑定缓冲对象
-    // 第一个参数是目标缓冲的类型
-    // 第二个参数是传输的数据大小
-    // 第三个参数是传输的数据
-    // 第四个参数是指定了我们希望显卡如何管理给定的数据
     glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
-
-    // 三角形的位置不太会变，但会大量使用，因此用 GL_STATIC_DRAW
-    // 如果是动态变化的数据，可以用 GL_DYNAMIC_DRAW
 
     return VBO;
 }
 
 unsigned int TimedTriangle::createVAO()
 {
-    // 第一个参数是顶点属性的位置值
-    // 第二个参数是顶点属性的大小
-    // 第三个参数是顶点属性的类型
-    // 第四个参数是是否希望数据被标准化
-    // 第五个参数是步长
-    // 第六个参数是偏移量
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    // glEnableVertexAttribArray(0);
-
-    // 现在我们绘制一个对象要经过这样的过程，如果我们要绘制多个对象，我们需要重复这个过程，这样会很麻烦
-    // 1. 绑定顶点数组对象
-    // 2. 复制顶点数组到缓冲中供 OpenGL 使用
-    // 3. 设置顶点属性指针
-    // 4. 绘制物体
-    // 5. 释放顶点数组对象
-
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    // 一个 VAO 存储了我们的顶点属性以及使用他的 VBO
-    // 当你想要绘制多个对象，先生成/配置所有 VAO 并存储他们
-    // 当我们想要绘制一个对象的时候，我们只需要绑定合适的 VAO 绘制之后再解绑它就好了
 
     unsigned int VBO = createVBO();
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -87,23 +63,15 @@ unsigned int TimedTriangle::createVAO()
 
 unsigned int TimedTriangle::createVertexShader()
 {
-    // 暂时将 vertex shader 写在这里
     const std::string vertexShaderSource = readShader(
-        R"(C:\Users\nes\_handy-opengl-lab\shader\vertex-shader__basic.glsl)");
+        R"(C:\Users\nes\_handy-opengl-lab\shader\vertex-shader__uniform.glsl)");
     const char* sourcePtr = vertexShaderSource.c_str();
 
-    // 创建一个 shader 对象
     const unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    // 接下来，我们将 shader 源码附加到 shader 对象上，然后编译它
-    // 第一个参数是 shader 对象
-    // 第二个参数是我们传递的 shader 源码数量
-    // 第三个参数是我们传递的真正的 shader 源码
-    // 第四个参数是一个数组，用来指定每个传递的 shader 源码的长度
     glShaderSource(vertexShader, 1, &sourcePtr, nullptr);
     glCompileShader(vertexShader);
 
-    // 可能需要检查 shader 是否编译成功
     int success;
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success)
@@ -119,10 +87,9 @@ unsigned int TimedTriangle::createVertexShader()
 unsigned int TimedTriangle::createFragmentShader()
 {
     const std::string fragmentShaderSource = readShader(
-        R"(C:\Users\nes\_handy-opengl-lab\shader\fragment-shader__basic.glsl)");
+        R"(C:\Users\nes\_handy-opengl-lab\shader\fragment-shader__uniform.glsl)");
     const char* sourcePtr = fragmentShaderSource.c_str();
 
-    // 创建段着色器的过程和顶点着色器类似
     const unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &sourcePtr, nullptr);
     glCompileShader(fragmentShader);
@@ -150,7 +117,6 @@ unsigned int TimedTriangle::createShaderProgram()
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         log("failed to link shader program");
     }
-    // 删除着色器对象，因为它们已经链接到程序对象并不再需要
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
